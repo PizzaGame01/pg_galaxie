@@ -31,7 +31,7 @@ public class FuelRefineryContainer extends Container {
         this.canInteractWithCallable = IWorldPosCallable.of(te.getWorld(),te.getPos());
         trackIntArray(refíneryData);
         te.openInventory(playerInv.player);
-        this.addSlot(new Slot(te,0,0,0));
+        this.addSlot(new Slot(te,0,2*18+6,2*18+16));
 
         for(int l = 0; l < 3; ++l) {
             for(int j1 = 0; j1 < 9; ++j1) {

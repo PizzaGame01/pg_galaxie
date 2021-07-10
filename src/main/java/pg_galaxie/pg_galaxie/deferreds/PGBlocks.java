@@ -31,5 +31,5 @@ public class PGBlocks {
     public static RegistryObject<Block> WARPED_CHEST = BLOCKS.register("warped_chest",() -> new DisplayCaseBlock(PGChestType.WARPED, AbstractBlock.Properties.create(Material.WOOD)));
 
     public static RegistryObject<LaunchpadBlock> LAUNCHPAD = BLOCKS.register("launchpad",() -> new LaunchpadBlock(AbstractBlock.Properties.create(Material.ROCK)));
-    public static RegistryObject<Block> FUEL_REFINERY_BLOCK = BLOCKS.register("fuel_refinery_block",() -> new FuelRefineryBlock(AbstractBlock.Properties.create(Material.WOOD)));
+    public static RegistryObject<Block> FUEL_REFINERY_BLOCK = BLOCKS.register("fuel_refinery",() -> new FuelRefineryBlock(AbstractBlock.Properties.create(Material.WOOD)));
 }

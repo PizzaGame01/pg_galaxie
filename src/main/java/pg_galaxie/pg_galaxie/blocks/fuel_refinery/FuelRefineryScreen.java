@@ -13,7 +13,7 @@ public class FuelRefineryScreen extends ContainerScreen<FuelRefineryContainer> {
 
     private static final ResourceLocation DISPLAY_CASE_GUI = new ResourceLocation(Pg_galaxie.MODID,"textures/gui/display_case.png");
     private static final ResourceLocation[] fluids = new ResourceLocation[]{new ResourceLocation(Pg_galaxie.MODID,"textures/gui/3mb_empty.png"),new ResourceLocation(Pg_galaxie.MODID,"textures/gui/3mb_water.png"),new ResourceLocation(Pg_galaxie.MODID,"textures/gui/3mb_lava.png")};
-
+    private static final ResourceLocation SLOT = new ResourceLocation(Pg_galaxie.MODID,"textures/gui/slot.png");
 
     public int rs,oldBuckets,oldRs;
 
@@ -37,18 +37,25 @@ public class FuelRefineryScreen extends ContainerScreen<FuelRefineryContainer> {
         int y = (this.height - this.ySize) / 2;
         this.blit(matrixStack,x,y,0,0,this.xSize,this.ySize);
 
-        this.minecraft.textureManager.bindTexture(fluids[0]);
-        this.blit(matrixStack,x,y,0,0,19,53,19,53);
-
         matrixStack.push();
 
+        int extrax = 8, extray = 16;
+
+        this.minecraft.textureManager.bindTexture(fluids[0]);
+        this.blit(matrixStack,x+extrax,y+extray,0,0,19,53,19,53);
+
+
         this.minecraft.textureManager.bindTexture(fluids[1]);
-        //this.blit(matrixStack,0,0,0,-2,0,0,19,53,19,53);
-
-
         int interpolatedRs = (int) (this.oldRs + (this.rs - this.oldRs) * partialTicks);
-        this.blit(matrixStack, x, y+53-(interpolatedRs+1), 0, -interpolatedRs-1, 19, interpolatedRs, 19, 53);//+((53/maxbuckets)*(maxbuckets-buckets))
+        this.blit(matrixStack, x+extrax, y+extray+53-(interpolatedRs+1), 0, -interpolatedRs-1, 19, interpolatedRs, 19, 53);//+((53/maxbuckets)*(maxbuckets-buckets))
+
         matrixStack.pop();
+
+
+        this.minecraft.textureManager.bindTexture(SLOT);
+        this.blit(matrixStack, x+(2*18)+6-1, y+(2*18)+16-1,0,0,18,18,18,18);
+
+        //this.container.inventorySlots.forEach(s -> this.blit(matrixStack, (s[0]*18)+x-12+this.type.extrax, (s[1]*18)+y+s.get,0,0,18,18,18,18));
     }
 
     @Override
@@ -71,8 +78,6 @@ public class FuelRefineryScreen extends ContainerScreen<FuelRefineryContainer> {
                 this.oldBuckets = this.container.te.buckets;
             }
         }
-
-        System.out.println(this.container.te.buckets);
     }
 
     private int getRsForBucekts(int buckets) {
