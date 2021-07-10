@@ -72,11 +72,11 @@ public class FuelRefineryBlock extends Block {
 
             if (y.getItem() == Items.WATER_BUCKET) {
 
-                    if(fr.buckets < fr.maxbuckets) {
+                if(fr.buckets < fr.maxbuckets) {
 
-                        fr.buckets++;
-                        fr.inventory.set(0, ItemStack.EMPTY);
-                        fr.getUpdatePacket();
+                    fr.buckets++;
+                    fr.inventory.set(0, ItemStack.EMPTY);
+                    fr.getUpdatePacket();
 
                 }
                 fr.inventory.set(0, new ItemStack(Items.BUCKET, 1));

@@ -97,6 +97,8 @@ public class FuelRefineryTileEntity extends LockableLootTileEntity {
 
     public void read(BlockState state, CompoundNBT nbt) {
         super.read(state, nbt);
+
+        this.buckets = nbt.getInt("buckets");
         this.inventory = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
         if (!this.checkLootAndRead(nbt)) {
             ItemStackHelper.loadAllItems(nbt, this.inventory);
@@ -105,6 +107,7 @@ public class FuelRefineryTileEntity extends LockableLootTileEntity {
 
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
+        compound.putInt("buckets",this.buckets);
         if (!this.checkLootAndWrite(compound)) {
             ItemStackHelper.saveAllItems(compound, this.inventory);
         }
