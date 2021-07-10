@@ -44,10 +44,13 @@ public class FuelRefineryContainer extends Container {
         }
     }
 
+    public FuelRefineryContainer(final int windowId, final PlayerInventory playerInv, final FuelRefineryTileEntity te){
+        this(windowId,playerInv,te,te.refineryData);
+    }
+
     public FuelRefineryContainer(int i, PlayerInventory playerInventory, PacketBuffer packetBuffer) {
-        this(i,playerInventory,FuelRefineryContainer.getTileEntity(playerInventory,packetBuffer),new IntArray(3));
+        this(i,playerInventory,FuelRefineryContainer.getTileEntity(playerInventory,packetBuffer));
         this.te.buckets = packetBuffer.readInt();
-        //this.te.rs = packetBuffer.readInt();
     }
 
 
