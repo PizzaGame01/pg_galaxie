@@ -23,6 +23,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.Random;
 import java.util.function.Consumer;
 
@@ -40,11 +41,25 @@ public class FuelRefineryBlock extends Block {
         if (worldIn.isRemote) {
             return ActionResultType.SUCCESS;
         } else {
-            TileEntity te = worldIn.getTileEntity(pos);
-            if (te instanceof FuelRefineryTileEntity) {
-                Consumer<PacketBuffer> packetBufferConsumer = pb -> pb.writeBlockPos(pos).writeInt(((FuelRefineryTileEntity) te).buckets);
+            if(!(player.getHeldItem(handIn).getItem() instanceof BucketItem)) {
+                TileEntity te = worldIn.getTileEntity(pos);
+                if (te instanceof FuelRefineryTileEntity) {
+                    Consumer<PacketBuffer> packetBufferConsumer = pb -> pb.writeBlockPos(pos).writeInt(((FuelRefineryTileEntity) te).buckets);
 
-                NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) te,packetBufferConsumer);
+                    NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) te, packetBufferConsumer);
+                }
+            }else {
+                if(player.getHeldItem(handIn).getItem() == Items.WATER_BUCKET){
+                    TileEntity te = worldIn.getTileEntity(pos);
+                    if (te instanceof FuelRefineryTileEntity) {
+                        if(((FuelRefineryTileEntity) te).buckets < ((FuelRefineryTileEntity) te).maxbuckets){
+                            if(!player.isCreative()){
+                                player.inventory.setInventorySlotContents(player.inventory.currentItem,new ItemStack(Items.BUCKET,1));
+                            }
+                            ((FuelRefineryTileEntity) te).buckets++;
+                        }
+                    }
+                }
             }
             return ActionResultType.CONSUME;
         }
