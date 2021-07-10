@@ -9,7 +9,6 @@ import pg_galaxie.pg_galaxie.entitys.alien.AlienEntity;
 
 import java.util.EnumSet;
 
-// FIXME: 29.03.2021 
 public class FollowGoal extends Goal {
     private static final EntityPredicate ENTITY_PREDICATE = (new EntityPredicate()).setDistance(10.0D).allowInvulnerable().allowFriendlyFire().setSkipAttackChecks().setIgnoresLineOfSight();
     protected final AlienEntity creature;

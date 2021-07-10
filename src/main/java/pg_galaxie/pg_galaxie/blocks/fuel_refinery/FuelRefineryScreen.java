@@ -23,7 +23,6 @@ public class FuelRefineryScreen extends ContainerScreen<FuelRefineryContainer> {
         //this.rss = 53;
         this.oldBuckets = this.container.te.buckets;
         this.rs = getRsForBucekts(this.oldBuckets);//53;
-        // TODO: 09.07.2021 save rs in the tile entity
     }
 
     public FuelRefineryScreen(Container container, PlayerInventory playerInventory, ITextComponent iTextComponent) {

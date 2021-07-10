@@ -7,10 +7,12 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
@@ -93,19 +95,22 @@ public class RocketEntity extends CreatureEntity implements IRideable{
             this.world.addEntity(item);
             this.remove();
         }
+    }
 
+    @Override
+    public void baseTick() {
+        super.baseTick();
+
+        BlockPos old = this.getPosition();
+        BlockPos bp = new BlockPos(old.getX(),old.getY(),old.getZ());
         // TODO: 05.07.2021 ask if rocket fly
+
+
         if (world instanceof ServerWorld) {
-            ((World) world).getServer().getCommandManager().handleCommand(
-                    new CommandSource(ICommandSource.DUMMY, new Vector3d(bp.getX(), bp.getY(), bp.getZ()), Vector2f.ZERO, (ServerWorld) world, 4, "",
-                            new StringTextComponent(""), ((World) world).getServer(), null).withFeedbackDisabled(),
-                    "/particle minecraft:flame ~ ~-2.2 ~ .1 .1 .1 .001 100 force");
-        }
-        if (world instanceof ServerWorld) {
-            ((World) world).getServer().getCommandManager().handleCommand(
-                    new CommandSource(ICommandSource.DUMMY, new Vector3d(bp.getX(), bp.getY(), bp.getZ()), Vector2f.ZERO, (ServerWorld) world, 4, "",
-                            new StringTextComponent(""), ((World) world).getServer(), null).withFeedbackDisabled(),
-                    "/particle minecraft:smoke ~ ~-3.2 ~ .1 .1 .1 .04 50 force");
+            for (ServerPlayerEntity p : ((ServerWorld) world).getPlayers()) {
+                ((ServerWorld) world).spawnParticle(p, ParticleTypes.FLAME, true, this.getPosX(), this.getPosY(), this.getPosZ(), 100, 0.1, 0.1, 0.1, (double) 0.001);
+                ((ServerWorld) world).spawnParticle(p, ParticleTypes.SMOKE, true, this.getPosX(), this.getPosY(), this.getPosZ(), 50, 0.1, 0.1, 0.1, (double) 0.04);
+            }
         }
     }
 
