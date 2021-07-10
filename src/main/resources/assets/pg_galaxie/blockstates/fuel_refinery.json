@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
+    "facing=north": {
       "model": "pg_galaxie:block/fuel_refinery"
+    },
+    "facing=east": {
+      "model": "pg_galaxie:block/fuel_refinery",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "pg_galaxie:block/fuel_refinery",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "pg_galaxie:block/fuel_refinery",
+      "y": 270
     }
   }
 }

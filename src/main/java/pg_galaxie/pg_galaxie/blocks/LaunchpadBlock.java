@@ -3,16 +3,25 @@ package pg_galaxie.pg_galaxie.blocks;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathType;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.*;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -23,13 +32,14 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-public class LaunchpadBlock extends Block {
+public class LaunchpadBlock extends Block implements IWaterLoggable {
 
     public static final IntegerProperty STATE = IntegerProperty.create("state", 0, 1);
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public LaunchpadBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(STATE, Integer.valueOf(0)));
+        this.setDefaultState(this.stateContainer.getBaseState().with(STATE, 0).with(WATERLOGGED, Boolean.FALSE));
     }
 
     @Override
@@ -44,7 +54,7 @@ public class LaunchpadBlock extends Block {
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(STATE);
+        builder.add(STATE,WATERLOGGED);
     }
 
     @Override
@@ -128,9 +138,26 @@ public class LaunchpadBlock extends Block {
     //}
 
 
+    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (stateIn.get(WATERLOGGED)) {
+            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+        }
+
+        return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+    }
+
     @Override
     public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
         Block b = worldIn.getBlockState(pos.down()).getBlock();
         return !(b.matchesBlock(Blocks.COBWEB)||b instanceof FlowingFluidBlock || b instanceof SaplingBlock||b instanceof LeavesBlock||b instanceof LaunchpadBlock||b instanceof CropsBlock||b instanceof LadderBlock||b instanceof AbstractRailBlock|| b instanceof FlowerBlock);
+    }
+
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+    }
+
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        FluidState fluidstate = context.getWorld().getFluidState(context.getPos());
+        return this.getDefaultState().with(WATERLOGGED, Boolean.valueOf(fluidstate.getFluid() == Fluids.WATER));
     }
 }
