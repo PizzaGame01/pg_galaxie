@@ -1,0 +1,17 @@
+{
+  "item.pg_galaxie.alien_spawn_egg": "Alien Spawn Egg",
+
+  "block.pg_galaxie.oak_chest": "Oak Chest",
+  "block.pg_galaxie.dark_oak_chest": "Dark Oak Chest",
+  "block.pg_galaxie.birch_chest": "Birch Chest",
+  "block.pg_galaxie.spruce_chest": "Spruce Chest",
+  "block.pg_galaxie.acacia_chest": "Acacia Chest",
+  "block.pg_galaxie.warped_chest": "Warped Chest",
+  "block.pg_galaxie.crimson_chest": "Crimson Chest",
+  "block.pg_galaxie.jungle_chest": "Jungle Chest",
+
+  "job.pg_galaxie.job1": "Smith",
+  "job.pg_galaxie.job2": "Butcher",
+
+  "entity.pg_galaxie.alien": "Alien"
+}

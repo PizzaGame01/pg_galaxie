@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "pg_galaxie:block/spruce_chest"
+    },
+    "facing=east": {
+      "model": "pg_galaxie:block/spruce_chest",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "pg_galaxie:block/spruce_chest",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "pg_galaxie:block/spruce_chest",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "state=0": {
+      "model": "pg_galaxie:block/launchpad_small"
+    },
+    "state=1": {
+      "model": "pg_galaxie:block/launchpad_high"
+    }
+  }
+}

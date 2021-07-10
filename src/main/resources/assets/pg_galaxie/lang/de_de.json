@@ -1,0 +1,17 @@
+{
+"item.pg_galaxie.alien_spawn_egg": "Alien-Erschaffungs-Ei",
+
+"block.pg_galaxie.oak_chest": "Eichentruhe",
+"block.pg_galaxie.dark_oak_chest": "Schwarzeichentruhe",
+"block.pg_galaxie.birch_chest": "Birkentruhe",
+"block.pg_galaxie.spruce_chest": "Fichtenholz",
+"block.pg_galaxie.acacia_chest": "Akazientruhe",
+"block.pg_galaxie.warped_chest": "Karmesintruhe",
+"block.pg_galaxie.crimson_chest": "Wirrtruhe",
+"block.pg_galaxie.jungle_chest": "Tropentruhe",
+
+"job.pg_galaxie.job1": "Schmied",
+"job.pg_galaxie.job2": "Schlachter",
+
+"entity.pg_galaxie.alien": "Alien"
+}

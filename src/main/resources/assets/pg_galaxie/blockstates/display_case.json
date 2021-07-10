@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "pg_galaxie:block/display_case"
+    },
+    "facing=east": {
+      "model": "pg_galaxie:block/display_case",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "pg_galaxie:block/display_case",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "pg_galaxie:block/display_case",
+      "y": 270
+    }
+  }
+}
