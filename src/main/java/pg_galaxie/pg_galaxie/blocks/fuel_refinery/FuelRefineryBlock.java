@@ -2,9 +2,12 @@ package pg_galaxie.pg_galaxie.blocks.fuel_refinery;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.fluid.WaterFluid;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.BucketItem;
@@ -20,17 +23,27 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.fml.network.NetworkHooks;
 import pg_galaxie.pg_galaxie.blocks.machine.InputMachine;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class FuelRefineryBlock extends InputMachine {
 
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+
 
     public FuelRefineryBlock(Properties properties) {
         super(properties);
@@ -98,6 +111,14 @@ public class FuelRefineryBlock extends InputMachine {
 
                 if(fr.buckets < fr.maxbuckets) {
 
+
+                    AtomicInteger _retval = new AtomicInteger(0);
+                    fr.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)
+                            .ifPresent(capability -> _retval.set(capability.getFluidInTank(3000).getAmount()));
+                    int amount = (int) 1000+_retval.get();
+                    fr.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).ifPresent(capability -> capability.fill(new FluidStack(Fluids.WATER, amount), IFluidHandler.FluidAction.EXECUTE));
+
+
                     fr.buckets++;
                     fr.inventory.set(0, ItemStack.EMPTY);
                     fr.getUpdatePacket();
@@ -128,5 +149,14 @@ public class FuelRefineryBlock extends InputMachine {
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+    }
+
+    public void setupEnergy(World world,BlockPos pos){
+        {
+            TileEntity _ent = world.getTileEntity(pos);
+            int _amount = (int) 1000;
+            if (_ent != null)
+                _ent.getCapability(CapabilityEnergy.ENERGY, null).ifPresent(capability -> capability.receiveEnergy(_amount, false));
+        }
     }
 }

@@ -33,7 +33,7 @@ public abstract class InputMachine extends Block {
 
     public void networkUpdate(BlockPos pos,World worldIn){
         if(!worldIn.isRemote()){
-            if(INPUTS.get(pos) == null){
+            if(!INPUTS.containsKey(pos)){
                 INPUTS.put(pos,new ArrayList<BlockPos>());
             }
             List<BlockPos> bl = new ArrayList<BlockPos>();
@@ -56,9 +56,12 @@ public abstract class InputMachine extends Block {
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        for (BlockPos c : INPUTS.get(pos)) {
-            System.out.println(c.getCoordinatesAsString());
+        if(!INPUTS.containsKey(pos)){
+            INPUTS.put(pos,new ArrayList<BlockPos>());
         }
+        /*for (BlockPos c : INPUTS.get(pos)) {
+            System.out.println(c.getCoordinatesAsString());
+        }*/
         return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
     }
 
