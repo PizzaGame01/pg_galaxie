@@ -2,9 +2,7 @@ package pg_galaxie.pg_galaxie.blocks.machine;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -13,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class EnergyCable extends Block {
     public EnergyCable(Properties properties) {
@@ -46,7 +43,7 @@ public class EnergyCable extends Block {
                 }else {
                     if(this.IsInputMachine(world,c)) {
                         if(!machines.containsKey(c)) {
-                            //System.out.println("machine"+engine.getCoordinatesAsString()+" find at: "+c.getCoordinatesAsString());
+                            System.out.println("machine"+engine.getCoordinatesAsString()+" find at: "+c.getCoordinatesAsString());
                             blocked.add(c);
                             List<BlockPos> pos = machines.get(engine);
                             pos.add(c);
@@ -54,7 +51,7 @@ public class EnergyCable extends Block {
                         }
                     }else if(this.IsOuputMachine(world,c)) {
                         if(!machines.containsKey(c)) {
-                            //System.out.println("machine"+engine.getCoordinatesAsString()+" find at: "+c.getCoordinatesAsString());
+                            System.out.println("machine"+engine.getCoordinatesAsString()+" find at: "+c.getCoordinatesAsString());
                             blocked.add(c);
                             List<BlockPos> pos = machines.get(engine);
                             pos.add(c);
@@ -73,11 +70,14 @@ public class EnergyCable extends Block {
 
 
         if(!worldIn.isRemote()){
-            System.out.println("update");
+            //System.out.println("update");
             if(!INPUTS.containsKey(pos)){
                 INPUTS.put(pos,new ArrayList<BlockPos>());
             }
-            for (BlockPos bp : INPUTS.get(pos)) {
+
+            List<BlockPos> BLOCKS = INPUTS.get(pos);
+            INPUTS.clear();
+            for (BlockPos bp : BLOCKS) {
                 if (worldIn.getBlockState(bp).getBlock() instanceof InputMachine) {
                     ((InputMachine)worldIn.getBlockState(bp).getBlock()).INPUTS.remove(bp);
                     ((InputMachine)worldIn.getBlockState(bp).getBlock()).networkUpdate(pos,((World)worldIn));

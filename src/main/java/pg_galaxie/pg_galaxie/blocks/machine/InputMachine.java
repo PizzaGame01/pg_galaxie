@@ -69,7 +69,7 @@ public abstract class InputMachine extends Block {
     public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
         if(!worldIn.isRemote()){
-            System.out.println("update");
+            //System.out.println("update");
             INPUTS.clear();
             this.networkUpdate(pos,((World)worldIn));
         }

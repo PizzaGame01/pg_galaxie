@@ -1,13 +1,8 @@
 package pg_galaxie.pg_galaxie;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.EntityType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -21,7 +16,6 @@ import pg_galaxie.pg_galaxie.blocks.fuel_refinery.FuelRefineryScreen;
 import pg_galaxie.pg_galaxie.deferreds.PGContainerType;
 import pg_galaxie.pg_galaxie.deferreds.PGEntitys;
 import pg_galaxie.pg_galaxie.entitys.alien.AlienRenderer;
-import pg_galaxie.pg_galaxie.entitys.rocket.RocketEntity;
 import pg_galaxie.pg_galaxie.entitys.rocket.RocketRenderer;
 import pg_galaxie.pg_galaxie.items.PGSpawnEggItem;
 

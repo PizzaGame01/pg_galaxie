@@ -1,6 +1,5 @@
 package pg_galaxie.pg_galaxie;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.PointOfView;
@@ -8,6 +7,7 @@ import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -45,7 +45,9 @@ public class Pg_galaxie {
 
     public Pg_galaxie() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        PGFluids.FLUIDS.register(bus);
         PGBlocks.BLOCKS.register(bus);
+        PGFluids.FLUIDS.register(bus);
         PGItems.ITEMS.register(bus);
         PGTileEntitys.TILE_ENTITYS.register(bus);
         PGContainerType.CONTAINER_TYPES.register(bus);
@@ -64,6 +66,9 @@ public class Pg_galaxie {
     }
 
     private void setup(final FMLCommonSetupEvent event) {
+
+        event.enqueueWork(() -> {
+        });
 
         DeferredWorkQueue.runLater(() -> {
             GlobalEntityTypeAttributes.put((EntityType<? extends AgeableEntity>) PGEntitys.ALIEN.get(), AlienEntity.setCustomAttributes().create());
@@ -108,11 +113,14 @@ public class Pg_galaxie {
     // Event bus for receiving Registry Events)
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
+
+
+
         @SubscribeEvent
-        public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
-            // register a new block here
-            LOGGER.info("HELLO from Register Block");
+        public static void onFluidRegistry(final RegistryEvent.Register<Fluid> event){
+
         }
+
     }
 
     @OnlyIn(Dist.CLIENT)

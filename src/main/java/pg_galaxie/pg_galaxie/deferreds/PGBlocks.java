@@ -1,13 +1,8 @@
 package pg_galaxie.pg_galaxie.deferreds;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.WallTorchBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.item.WallOrFloorItem;
-import net.minecraftforge.common.ToolType;
+import net.minecraft.fluid.FlowingFluid;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -17,6 +12,8 @@ import pg_galaxie.pg_galaxie.blocks.PGChestType;
 import pg_galaxie.pg_galaxie.blocks.chest.DisplayCaseBlock;
 import pg_galaxie.pg_galaxie.blocks.fuel_refinery.FuelRefineryBlock;
 import pg_galaxie.pg_galaxie.blocks.machine.EnergyCable;
+
+import java.util.function.Supplier;
 
 public class PGBlocks {
     public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Pg_galaxie.MODID);
@@ -34,4 +31,8 @@ public class PGBlocks {
     public static RegistryObject<LaunchpadBlock> LAUNCHPAD = BLOCKS.register("launchpad",() -> new LaunchpadBlock(AbstractBlock.Properties.create(Material.ROCK)));
     public static RegistryObject<Block> FUEL_REFINERY_BLOCK = BLOCKS.register("fuel_refinery",() -> new FuelRefineryBlock(AbstractBlock.Properties.create(Material.WOOD)));
     public static RegistryObject<EnergyCable> CABLE = BLOCKS.register("cable",() -> new EnergyCable(AbstractBlock.Properties.create(Material.WOOD)));
+    public static final RegistryObject<FlowingFluidBlock> FUEL = BLOCKS.register("fuel", () -> new FlowingFluidBlock(PGFluids.FUEL, AbstractBlock.Properties.create(Material.WATER).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops()));
+
+    //public static RegistryObject<Block> FUEL = BLOCKS.register("fuel", () -> new FlowingFluidBlock((Supplier<? extends FlowingFluid>) PGFluids.FUEL.get(), AbstractBlock.Properties.create(Material.WATER).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops()));
+
 }
