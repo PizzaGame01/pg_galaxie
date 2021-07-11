@@ -2,7 +2,7 @@
   "parent": "minecraft:block/orientable",
   "textures": {
     "top": "pg_galaxie:block/machine",
-    "front": "pg_galaxie:block/refinery",
+    "front": "pg_galaxie:block/refinery_empty",
     "side": "pg_galaxie:block/machine"
   }
 }

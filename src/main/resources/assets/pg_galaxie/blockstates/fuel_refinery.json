@@ -1,18 +1,66 @@
 {
   "variants": {
-    "facing=north": {
-      "model": "pg_galaxie:block/fuel_refinery"
+    "facing=north,buckets=0": {
+      "model": "pg_galaxie:block/refinery_empty"
     },
-    "facing=east": {
-      "model": "pg_galaxie:block/fuel_refinery",
+    "facing=east,buckets=0": {
+      "model": "pg_galaxie:block/refinery_empty",
       "y": 90
     },
-    "facing=south": {
-      "model": "pg_galaxie:block/fuel_refinery",
+    "facing=south,buckets=0": {
+      "model": "pg_galaxie:block/refinery_empty",
       "y": 180
     },
-    "facing=west": {
-      "model": "pg_galaxie:block/fuel_refinery",
+    "facing=west,buckets=0": {
+      "model": "pg_galaxie:block/refinery_empty",
+      "y": 270
+    },
+
+    "facing=north,buckets=1": {
+      "model": "pg_galaxie:block/refinery_low"
+    },
+    "facing=east,buckets=1": {
+      "model": "pg_galaxie:block/refinery_low",
+      "y": 90
+    },
+    "facing=south,buckets=1": {
+      "model": "pg_galaxie:block/refinery_low",
+      "y": 180
+    },
+    "facing=west,buckets=1": {
+      "model": "pg_galaxie:block/refinery_low",
+      "y": 270
+    },
+
+    "facing=north,buckets=2": {
+      "model": "pg_galaxie:block/refinery_middle"
+    },
+    "facing=east,buckets=2": {
+      "model": "pg_galaxie:block/refinery_middle",
+      "y": 90
+    },
+    "facing=south,buckets=2": {
+      "model": "pg_galaxie:block/refinery_middle",
+      "y": 180
+    },
+    "facing=west,buckets=2": {
+      "model": "pg_galaxie:block/refinery_middle",
+      "y": 270
+    },
+
+    "facing=north,buckets=3": {
+      "model": "pg_galaxie:block/refinery_full"
+    },
+    "facing=east,buckets=3": {
+      "model": "pg_galaxie:block/refinery_full",
+      "y": 90
+    },
+    "facing=south,buckets=3": {
+      "model": "pg_galaxie:block/refinery_full",
+      "y": 180
+    },
+    "facing=west,buckets=3": {
+      "model": "pg_galaxie:block/refinery_full",
       "y": 270
     }
   }

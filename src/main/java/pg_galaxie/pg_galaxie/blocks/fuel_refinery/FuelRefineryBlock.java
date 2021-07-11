@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -43,21 +44,29 @@ import java.util.function.Consumer;
 public class FuelRefineryBlock extends InputMachine {
 
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    public static final IntegerProperty BUCKETS = IntegerProperty.create("buckets",0,3);
 
 
     public FuelRefineryBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));
+        this.setDefaultState(this.getStateContainer().getBaseState().with(BUCKETS,0).with(FACING, Direction.NORTH));
     }
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         super.onBlockActivated(state,worldIn,pos,player,handIn,hit);
+        TileEntity te = worldIn.getTileEntity(pos);
         if (worldIn.isRemote) {
+            if (te != null) {
+                if(((FuelRefineryTileEntity) te).buckets < ((FuelRefineryTileEntity) te).maxbuckets) {
+                    if (player.getHeldItem(handIn).getItem() == Items.WATER_BUCKET) {
+                        worldIn.playSound(player, pos, SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1f, 1f);
+                    }
+                }
+            }
             return ActionResultType.SUCCESS;
         } else {
             if(!(player.getHeldItem(handIn).getItem() instanceof BucketItem)) {
-                TileEntity te = worldIn.getTileEntity(pos);
                 if (te instanceof FuelRefineryTileEntity) {
                     Consumer<PacketBuffer> packetBufferConsumer = pb -> pb.writeBlockPos(pos).writeInt(((FuelRefineryTileEntity) te).buckets);
 
@@ -65,12 +74,21 @@ public class FuelRefineryBlock extends InputMachine {
                 }
             }else {
                 if(player.getHeldItem(handIn).getItem() == Items.WATER_BUCKET){
-                    TileEntity te = worldIn.getTileEntity(pos);
                     if (te instanceof FuelRefineryTileEntity) {
                         if(((FuelRefineryTileEntity) te).buckets < ((FuelRefineryTileEntity) te).maxbuckets){
                             if(!player.isCreative()){
                                 player.inventory.setInventorySlotContents(player.inventory.currentItem,new ItemStack(Items.BUCKET,1));
                             }
+
+                            AtomicInteger _retval = new AtomicInteger(0);
+                            te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)
+                                    .ifPresent(capability -> _retval.set(capability.getFluidInTank(3000).getAmount()));
+                            int amount = (int) 1000+_retval.get();
+                            te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).ifPresent(capability -> capability.fill(new FluidStack(Fluids.WATER, amount), IFluidHandler.FluidAction.EXECUTE));
+
+                            ((World)worldIn).setBlockState(pos, state.with(BUCKETS, ((FuelRefineryTileEntity)te).buckets+1), 2);
+                            ((World)worldIn).updateComparatorOutputLevel(pos, this);
+
                             ((FuelRefineryTileEntity) te).buckets++;
                         }
                     }
@@ -120,6 +138,8 @@ public class FuelRefineryBlock extends InputMachine {
 
 
                     fr.buckets++;
+                    ((World)worldIn).setBlockState(pos, state.with(BUCKETS, fr.buckets), 2);
+                    ((World)worldIn).updateComparatorOutputLevel(pos, this);
                     fr.inventory.set(0, ItemStack.EMPTY);
                     fr.getUpdatePacket();
 
@@ -142,7 +162,7 @@ public class FuelRefineryBlock extends InputMachine {
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING,BUCKETS);
     }
 
     @Nullable
