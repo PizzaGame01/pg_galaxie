@@ -12,7 +12,7 @@ import pg_galaxie.pg_galaxie.blocks.chest.DisplayCaseContainer;
 public class FuelRefineryScreen extends ContainerScreen<FuelRefineryContainer> {
 
     private static final ResourceLocation DISPLAY_CASE_GUI = new ResourceLocation(Pg_galaxie.MODID,"textures/gui/display_case.png");
-    private static final ResourceLocation[] fluids = new ResourceLocation[]{new ResourceLocation(Pg_galaxie.MODID,"textures/gui/3mb_empty.png"),new ResourceLocation(Pg_galaxie.MODID,"textures/gui/3mb_water.png"),new ResourceLocation(Pg_galaxie.MODID,"textures/gui/3mb_lava.png")};
+    private static final ResourceLocation[] fluids = new ResourceLocation[]{new ResourceLocation(Pg_galaxie.MODID,"textures/gui/fluid_empty.png"),new ResourceLocation(Pg_galaxie.MODID,"textures/gui/fluid_oil.png"),new ResourceLocation(Pg_galaxie.MODID,"textures/gui/fluid_fuel.png")};
     private static final ResourceLocation SLOT = new ResourceLocation(Pg_galaxie.MODID,"textures/gui/refinery_slot.png");
 
     public int rs,oldBuckets,oldRs;

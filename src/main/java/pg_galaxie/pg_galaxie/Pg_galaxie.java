@@ -79,7 +79,7 @@ public class Pg_galaxie {
 
         ClientRegistry.bindTileEntityRenderer((TileEntityType)PGTileEntitys.DISPLAYCASETILE.get(), DisplayCaseRenderer::new);
 
-        RenderTypeLookup.setRenderLayer(PGBlocks.FUEL.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(PGBlocks.FUEL.get(), RenderType.getTranslucent());
 
         // some preinit code
         LOGGER.info("HELLO FROM PREINIT");

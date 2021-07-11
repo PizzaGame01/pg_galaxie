@@ -115,7 +115,7 @@ public class FuelFluid extends FlowingFluid {
         return net.minecraftforge.fluids.FluidAttributes.builder(
                 new ResourceLocation(Pg_galaxie.MODID,"block/fuel_still"),
                 new ResourceLocation(Pg_galaxie.MODID,"block/fuel_flow"))
-                .overlay(new ResourceLocation(Pg_galaxie.MODID,"block/water_overlay"))
+                .overlay(new ResourceLocation(Pg_galaxie.MODID,"block/fuel_overlay"))
                 .translationKey("block."+ Pg_galaxie.MODID +".fuel")
                 .sound(SoundEvents.ITEM_BUCKET_FILL, SoundEvents.ITEM_BUCKET_EMPTY)
                 .build(this);

@@ -1,6 +1,8 @@
 package pg_galaxie.pg_galaxie;
 
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.entity.EntityType;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -13,6 +15,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import pg_galaxie.pg_galaxie.blocks.PGChestType;
 import pg_galaxie.pg_galaxie.blocks.chest.DisplayCaseScreen;
 import pg_galaxie.pg_galaxie.blocks.fuel_refinery.FuelRefineryScreen;
+import pg_galaxie.pg_galaxie.deferreds.PGBlocks;
 import pg_galaxie.pg_galaxie.deferreds.PGContainerType;
 import pg_galaxie.pg_galaxie.deferreds.PGEntitys;
 import pg_galaxie.pg_galaxie.entitys.alien.AlienRenderer;

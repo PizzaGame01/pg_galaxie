@@ -41,7 +41,7 @@ public class EnergyCable extends Block {
                 if (world.getBlockState(c).getBlock() instanceof EnergyCable) {
                     ((EnergyCable) world.getBlockState(c).getBlock()).generateNetwork(engine, machines, blocked, c, world);
                 }else {
-                    if(this.IsInputMachine(world,c)) {
+                    if(this.MachineCanRecieve(world,c)) {
                         if(!machines.containsKey(c)) {
                             System.out.println("machine"+engine.getCoordinatesAsString()+" find at: "+c.getCoordinatesAsString());
                             blocked.add(c);
@@ -49,7 +49,7 @@ public class EnergyCable extends Block {
                             pos.add(c);
                             machines.put(engine, pos);
                         }
-                    }else if(this.IsOuputMachine(world,c)) {
+                    }else if(this.MachineCanExtract(world,c)) {
                         if(!machines.containsKey(c)) {
                             System.out.println("machine"+engine.getCoordinatesAsString()+" find at: "+c.getCoordinatesAsString());
                             blocked.add(c);
@@ -78,33 +78,26 @@ public class EnergyCable extends Block {
             List<BlockPos> BLOCKS = INPUTS.get(pos);
             INPUTS.clear();
             for (BlockPos bp : BLOCKS) {
-                if (worldIn.getBlockState(bp).getBlock() instanceof InputMachine) {
-                    ((InputMachine)worldIn.getBlockState(bp).getBlock()).INPUTS.remove(bp);
-                    ((InputMachine)worldIn.getBlockState(bp).getBlock()).networkUpdate(pos,((World)worldIn));
+                if (worldIn.getBlockState(bp).getBlock() instanceof MachineBlock) {
+                    ((MachineBlock)worldIn.getBlockState(bp).getBlock()).INPUTS.remove(bp);
+                    ((MachineBlock)worldIn.getBlockState(bp).getBlock()).networkUpdate(pos,((World)worldIn));
                 }
             }
         }
     }
 
 
-    public boolean IsInputMachine(World world,BlockPos pos){
+    public boolean MachineCanRecieve(World world,BlockPos pos){
         return Optional.ofNullable(world.getTileEntity(pos))
                 .flatMap(te -> te.getCapability(CapabilityEnergy.ENERGY).resolve())
                 .map(cap -> cap.canReceive())
                 .orElse(false);
     }
 
-    public boolean IsOuputMachine(World world, BlockPos pos){
-        //TileEntity te = world.getTileEntity(pos);
-        //if(te != null){
+    public boolean MachineCanExtract(World world, BlockPos pos){
         return Optional.ofNullable(world.getTileEntity(pos))
                 .flatMap(te -> te.getCapability(CapabilityEnergy.ENERGY).resolve())
                 .map(cap -> cap.canExtract())
                 .orElse(false);
-            /*AtomicBoolean can = new AtomicBoolean(false);
-            te.getCapability(CapabilityEnergy.ENERGY, null).ifPresent(c -> can.set(c.canExtract()));
-            return can.get();*/
-        //}
-        //return false;
     }
 }
