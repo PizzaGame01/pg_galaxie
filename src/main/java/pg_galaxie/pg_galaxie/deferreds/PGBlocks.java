@@ -31,7 +31,9 @@ public class PGBlocks {
     public static RegistryObject<LaunchpadBlock> LAUNCHPAD = BLOCKS.register("launchpad",() -> new LaunchpadBlock(AbstractBlock.Properties.create(Material.ROCK)));
     public static RegistryObject<Block> FUEL_REFINERY_BLOCK = BLOCKS.register("fuel_refinery",() -> new FuelRefineryBlock(AbstractBlock.Properties.create(Material.WOOD)));
     public static RegistryObject<EnergyCable> CABLE = BLOCKS.register("cable",() -> new EnergyCable(AbstractBlock.Properties.create(Material.WOOD)));
+
     public static final RegistryObject<FlowingFluidBlock> FUEL = BLOCKS.register("fuel", () -> new FlowingFluidBlock(PGFluids.FUEL, AbstractBlock.Properties.create(Material.WATER).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops()));
+    public static final RegistryObject<FlowingFluidBlock> OIL = BLOCKS.register("oil", () -> new FlowingFluidBlock(PGFluids.OIL, AbstractBlock.Properties.create(Material.WATER).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops()));
 
     //public static RegistryObject<Block> FUEL = BLOCKS.register("fuel", () -> new FlowingFluidBlock((Supplier<? extends FlowingFluid>) PGFluids.FUEL.get(), AbstractBlock.Properties.create(Material.WATER).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops()));
 

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "pg_galaxie:item/fuel_bucket"
+  }
+}

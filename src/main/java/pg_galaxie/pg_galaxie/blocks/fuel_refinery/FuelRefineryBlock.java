@@ -149,6 +149,9 @@ public class FuelRefineryBlock extends InputMachine {
             }
 
             worldIn.getPendingBlockTicks().scheduleTick(new BlockPos(pos.getX(), pos.getY(), pos.getZ()), this, 1);
+        }else {
+            //worldIn.getClosestPlayer()
+            //worldIn.playSound(player, pos, SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1f, 1f);
         }
     }
 

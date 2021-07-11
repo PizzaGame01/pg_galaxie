@@ -2,6 +2,8 @@ package pg_galaxie.pg_galaxie;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.CreatureEntity;
@@ -47,7 +49,7 @@ public class Pg_galaxie {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         PGFluids.FLUIDS.register(bus);
         PGBlocks.BLOCKS.register(bus);
-        PGFluids.FLUIDS.register(bus);
+        //PGFluids.FLUIDS.register(bus);
         PGItems.ITEMS.register(bus);
         PGTileEntitys.TILE_ENTITYS.register(bus);
         PGContainerType.CONTAINER_TYPES.register(bus);
@@ -76,6 +78,8 @@ public class Pg_galaxie {
         });
 
         ClientRegistry.bindTileEntityRenderer((TileEntityType)PGTileEntitys.DISPLAYCASETILE.get(), DisplayCaseRenderer::new);
+
+        RenderTypeLookup.setRenderLayer(PGBlocks.FUEL.get(), RenderType.getCutout());
 
         // some preinit code
         LOGGER.info("HELLO FROM PREINIT");

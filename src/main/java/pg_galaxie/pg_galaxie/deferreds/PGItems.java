@@ -37,5 +37,6 @@ public class PGItems {
  //   public static RegistryObject<Item> FUEL_BUCKET = ITEMS.register("fuel_bucket",() -> new BucketItem(PGFluids.FUEL.get(), (new Item.Properties()).containerItem(Items.BUCKET).maxStackSize(1).group(ItemGroup.MISC)));
 
     public static final RegistryObject<Item> FUEL_BUCKET = ITEMS.register("fuel_bucket", () -> new BucketItem(PGFluids.FUEL, (new Item.Properties()).containerItem(Items.BUCKET).maxStackSize(1).group(ItemGroup.MISC)));
+    public static final RegistryObject<Item> OIL_BUCKET = ITEMS.register("oil_bucket", () -> new BucketItem(PGFluids.OIL, (new Item.Properties()).containerItem(Items.BUCKET).maxStackSize(1).group(ItemGroup.MISC)));
 
 }

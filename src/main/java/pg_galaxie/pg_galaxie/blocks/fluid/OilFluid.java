@@ -32,17 +32,17 @@ import pg_galaxie.pg_galaxie.deferreds.PGItems;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class FuelFluid extends FlowingFluid {
+public class OilFluid extends FlowingFluid {
     public Fluid getFlowingFluid() {
-        return PGFluids.FLOWING_FUEL.get();
+        return PGFluids.FLOWING_OIL.get();
     }
 
     public Fluid getStillFluid() {
-        return PGFluids.FUEL.get();
+        return PGFluids.OIL.get();
     }
 
     public Item getFilledBucket() {
-        return PGItems.FUEL_BUCKET.get();
+        return PGItems.OIL_BUCKET.get();
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -77,7 +77,7 @@ public class FuelFluid extends FlowingFluid {
     }
 
     public BlockState getBlockState(FluidState state) {
-        return PGBlocks.FUEL.get().getDefaultState().with(FlowingFluidBlock.LEVEL, Integer.valueOf(getLevelFromState(state)));
+        return PGBlocks.OIL.get().getDefaultState().with(FlowingFluidBlock.LEVEL, Integer.valueOf(getLevelFromState(state)));
     }
 
     @Override
@@ -91,7 +91,7 @@ public class FuelFluid extends FlowingFluid {
     }
 
     public boolean isEquivalentTo(Fluid fluidIn) {
-        return fluidIn == PGFluids.FUEL.get() || fluidIn == PGFluids.FLOWING_FUEL.get();
+        return fluidIn == PGFluids.OIL.get() || fluidIn == PGFluids.FLOWING_OIL.get();
     }
 
     public int getLevelDecreasePerBlock(IWorldReader worldIn) {
@@ -112,16 +112,17 @@ public class FuelFluid extends FlowingFluid {
 
     @Override
     protected FluidAttributes createAttributes() {
-        return net.minecraftforge.fluids.FluidAttributes.builder(
-                new ResourceLocation(Pg_galaxie.MODID,"block/fuel_still"),
-                new ResourceLocation(Pg_galaxie.MODID,"block/fuel_flow"))
+        return FluidAttributes.builder(
+                new ResourceLocation(Pg_galaxie.MODID,"block/oil_still"),
+                new ResourceLocation(Pg_galaxie.MODID,"block/oil_flow"))
                 .overlay(new ResourceLocation(Pg_galaxie.MODID,"block/water_overlay"))
-                .translationKey("block."+ Pg_galaxie.MODID +".fuel")
+                .translationKey("block."+ Pg_galaxie.MODID +".oil")
+                //.color(0xffa0e67a)
                 .sound(SoundEvents.ITEM_BUCKET_FILL, SoundEvents.ITEM_BUCKET_EMPTY)
                 .build(this);
     }
 
-    public static class Flowing extends FuelFluid {
+    public static class Flowing extends OilFluid {
         protected void fillStateContainer(StateContainer.Builder<Fluid, FluidState> builder) {
             super.fillStateContainer(builder);
             builder.add(LEVEL_1_8);
@@ -136,7 +137,7 @@ public class FuelFluid extends FlowingFluid {
         }
     }
 
-    public static class Source extends FuelFluid {
+    public static class Source extends OilFluid {
         public int getLevel(FluidState state) {
             return 8;
         }
