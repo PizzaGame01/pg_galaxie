@@ -21,13 +21,14 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
+import pg_galaxie.pg_galaxie.blocks.machine.InputMachine;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.Random;
 import java.util.function.Consumer;
 
-public class FuelRefineryBlock extends Block {
+public class FuelRefineryBlock extends InputMachine {
 
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 
@@ -38,6 +39,7 @@ public class FuelRefineryBlock extends Block {
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        super.onBlockActivated(state,worldIn,pos,player,handIn,hit);
         if (worldIn.isRemote) {
             return ActionResultType.SUCCESS;
         } else {

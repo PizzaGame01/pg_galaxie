@@ -1,5 +1,7 @@
 package pg_galaxie.pg_galaxie.deferreds;
 
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -11,6 +13,7 @@ import org.lwjgl.system.CallbackI;
 import pg_galaxie.pg_galaxie.Pg_galaxie;
 import pg_galaxie.pg_galaxie.blocks.chest.DisplayCaseItemStackRenderer;
 import pg_galaxie.pg_galaxie.blocks.chest.DisplayCaseTileEntity;
+import pg_galaxie.pg_galaxie.blocks.machine.EnergyCable;
 import pg_galaxie.pg_galaxie.items.PGSpawnEggItem;
 import pg_galaxie.pg_galaxie.items.RocketItem;
 
@@ -36,4 +39,5 @@ public class PGItems {
 
     public static RegistryObject<Item> RocketItem = ITEMS.register("rocket_item", () -> new RocketItem(new Item.Properties().group(ItemGroup.MISC)));
     public static RegistryObject<Item> FUEL_REFINERY = ITEMS.register("fuel_refinery",() -> new BlockItem(PGBlocks.FUEL_REFINERY_BLOCK.get(),new Item.Properties().group(ItemGroup.DECORATIONS)));
+    public static RegistryObject<Item> CABLE = ITEMS.register("cable",() -> new BlockItem(PGBlocks.CABLE.get(),new Item.Properties().group(ItemGroup.DECORATIONS)));
 }

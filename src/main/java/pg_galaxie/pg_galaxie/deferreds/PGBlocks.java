@@ -16,6 +16,7 @@ import pg_galaxie.pg_galaxie.blocks.LaunchpadBlock;
 import pg_galaxie.pg_galaxie.blocks.PGChestType;
 import pg_galaxie.pg_galaxie.blocks.chest.DisplayCaseBlock;
 import pg_galaxie.pg_galaxie.blocks.fuel_refinery.FuelRefineryBlock;
+import pg_galaxie.pg_galaxie.blocks.machine.EnergyCable;
 
 public class PGBlocks {
     public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Pg_galaxie.MODID);
@@ -32,4 +33,5 @@ public class PGBlocks {
 
     public static RegistryObject<LaunchpadBlock> LAUNCHPAD = BLOCKS.register("launchpad",() -> new LaunchpadBlock(AbstractBlock.Properties.create(Material.ROCK)));
     public static RegistryObject<Block> FUEL_REFINERY_BLOCK = BLOCKS.register("fuel_refinery",() -> new FuelRefineryBlock(AbstractBlock.Properties.create(Material.WOOD)));
+    public static RegistryObject<EnergyCable> CABLE = BLOCKS.register("cable",() -> new EnergyCable(AbstractBlock.Properties.create(Material.WOOD)));
 }
