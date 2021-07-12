@@ -112,38 +112,26 @@ public abstract class MachineBlock extends Block {
 
             TileEntity fr = worldIn.getTileEntity(pb);
             if(fr == null){
+                System.out.println("contiune");
                 continue;
             }
 
             for (BlockPos bp : INPUTS.get(pos)) {
-
+                if(bp.getCoordinatesAsString().equals(pb.getCoordinatesAsString())){ continue;}
 
                 TileEntity te = worldIn.getTileEntity(bp);
                 if (te == null) {
+                    System.out.println("contiune");
                     continue;
                 }
-                if (this.MachineCanRecieve(worldIn,pb)) {
-                    if (this.MachineCanExtract(worldIn, bp)) {
-                        if (this.MachineEnergyAmount(worldIn, bp) > 0 && this.MachineEnergyAmount(worldIn, pb) < this.MachineEnergyMaxAmount(worldIn, pb))
-                            te.getCapability(CapabilityEnergy.ENERGY, Direction.NORTH).ifPresent(capability -> capability.extractEnergy(1, false));
-                            fr.getCapability(CapabilityEnergy.ENERGY, Direction.NORTH).ifPresent(capability -> capability.receiveEnergy(1, false));
-                            for (ServerPlayerEntity spe : worldIn.getPlayers()) {
-                                spe.sendMessage(ITextComponent.getTextComponentOrEmpty("send"),null);
-                            }
-                    } else {
-                        continue;
-                    }
-                } else if (this.MachineCanExtract(worldIn,pb)) {
-                    if (this.MachineCanRecieve(worldIn, bp)) {
-                        if (this.MachineEnergyAmount(worldIn, pos) > 0 && this.MachineEnergyAmount(worldIn, bp) < this.MachineEnergyMaxAmount(worldIn, bp)) {
-                            fr.getCapability(CapabilityEnergy.ENERGY, Direction.NORTH).ifPresent(capability -> capability.extractEnergy(1, false));
-                            te.getCapability(CapabilityEnergy.ENERGY, Direction.NORTH).ifPresent(capability -> capability.receiveEnergy(1, false));
-                            for (ServerPlayerEntity spe : worldIn.getPlayers()) {
-                                spe.sendMessage(ITextComponent.getTextComponentOrEmpty("send"),null);
-                            }
-                        } else {
-                            continue;
-                        }
+                if (this.MachineCanRecieve(worldIn,pb)||this.MachineCanExtract(worldIn, bp)) {
+                    if (this.MachineEnergyAmount(worldIn, bp) > 0 && this.MachineEnergyAmount(worldIn, pb) < this.MachineEnergyMaxAmount(worldIn, pb))
+                        te.getCapability(CapabilityEnergy.ENERGY, Direction.NORTH).ifPresent(capability -> capability.extractEnergy(1, false));
+                        fr.getCapability(CapabilityEnergy.ENERGY, Direction.NORTH).ifPresent(capability -> capability.receiveEnergy(1, false));
+                        System.out.println("send");
+                }else {
+                    for (ServerPlayerEntity spe : worldIn.getPlayers()) {
+                        spe.sendMessage(ITextComponent.getTextComponentOrEmpty("this want not to work"), null);
                     }
                 }
             }
