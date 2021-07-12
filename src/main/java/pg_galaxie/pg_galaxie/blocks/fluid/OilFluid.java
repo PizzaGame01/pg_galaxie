@@ -64,7 +64,7 @@ public class OilFluid extends FlowingFluid {
     }
 
     protected boolean canSourcesMultiply() {
-        return true;
+        return false;
     }
 
     protected void beforeReplacingBlock(IWorld worldIn, BlockPos pos, BlockState state) {
@@ -73,7 +73,7 @@ public class OilFluid extends FlowingFluid {
     }
 
     public int getSlopeFindDistance(IWorldReader worldIn) {
-        return 4;
+        return 2;
     }
 
     public BlockState getBlockState(FluidState state) {
@@ -95,7 +95,7 @@ public class OilFluid extends FlowingFluid {
     }
 
     public int getLevelDecreasePerBlock(IWorldReader worldIn) {
-        return 1;
+        return 2;
     }
 
     public int getTickRate(IWorldReader p_205569_1_) {

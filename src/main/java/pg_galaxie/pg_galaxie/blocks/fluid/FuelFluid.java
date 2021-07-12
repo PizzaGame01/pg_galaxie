@@ -64,7 +64,7 @@ public class FuelFluid extends FlowingFluid {
     }
 
     protected boolean canSourcesMultiply() {
-        return true;
+        return false;
     }
 
     protected void beforeReplacingBlock(IWorld worldIn, BlockPos pos, BlockState state) {

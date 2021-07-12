@@ -41,27 +41,28 @@ public class EnergyCable extends Block {
                 if (world.getBlockState(c).getBlock() instanceof EnergyCable) {
                     ((EnergyCable) world.getBlockState(c).getBlock()).generateNetwork(engine, machines, blocked, c, world);
                 }else {
-                    if(this.MachineCanRecieve(world,c)) {
-                        if(!machines.containsKey(c)) {
+                    if(this.MachineCanRecieve(world,c)||this.MachineCanExtract(world,c)) {
+                        //if(!machines.containsKey(c)) {
                             System.out.println("machine"+engine.getCoordinatesAsString()+" find at: "+c.getCoordinatesAsString());
                             blocked.add(c);
                             List<BlockPos> pos = machines.get(engine);
                             pos.add(c);
                             machines.put(engine, pos);
+                            //INPUTS.put()
                         }
-                    }else if(this.MachineCanExtract(world,c)) {
-                        if(!machines.containsKey(c)) {
+                    /*}else if(this.MachineCanExtract(world,c)) {
+                        //if(!machines.containsKey(c)) {
                             System.out.println("machine"+engine.getCoordinatesAsString()+" find at: "+c.getCoordinatesAsString());
                             blocked.add(c);
                             List<BlockPos> pos = machines.get(engine);
                             pos.add(c);
                             machines.put(engine, pos);
-                        }
+                        //}*/
 
                     }
                 }
             }
-        }
+
     }
 
     @Override
@@ -70,14 +71,14 @@ public class EnergyCable extends Block {
 
 
         if(!worldIn.isRemote()){
-            //System.out.println("update");
             if(!INPUTS.containsKey(pos)){
                 INPUTS.put(pos,new ArrayList<BlockPos>());
             }
 
             List<BlockPos> BLOCKS = INPUTS.get(pos);
-            INPUTS.clear();
+            //INPUTS.clear();
             for (BlockPos bp : BLOCKS) {
+                System.out.println("update");
                 if (worldIn.getBlockState(bp).getBlock() instanceof MachineBlock) {
                     ((MachineBlock)worldIn.getBlockState(bp).getBlock()).INPUTS.remove(bp);
                     ((MachineBlock)worldIn.getBlockState(bp).getBlock()).networkUpdate(pos,((World)worldIn));

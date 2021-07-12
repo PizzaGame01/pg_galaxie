@@ -3,8 +3,10 @@ package pg_galaxie.pg_galaxie.blocks.machine;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -75,6 +77,22 @@ public abstract class MachineBlock extends Block {
         if(!worldIn.isRemote()){
             //System.out.println("update");
             INPUTS.clear();
+            List<BlockPos> bl = new ArrayList<BlockPos>();
+            bl.add(pos.up());
+            bl.add(pos.down());
+            bl.add(pos.south());
+            bl.add(pos.north());
+            bl.add(pos.west());
+            bl.add(pos.east());
+
+            List<BlockPos> blocked = new ArrayList<BlockPos>();
+            blocked.add(pos);
+            for (BlockPos c : bl) {
+                if (worldIn.getBlockState(c).getBlock() instanceof EnergyCable) {
+                    ((EnergyCable) worldIn.getBlockState(c).getBlock()).neighborChanged(state,worldIn, pos,blockIn,fromPos,isMoving);
+                    break;
+                }
+            }
             this.networkUpdate(pos,((World)worldIn));
         }
     }
@@ -87,38 +105,48 @@ public abstract class MachineBlock extends Block {
             INPUTS.put(pos,new ArrayList<BlockPos>());
         }
 
-        TileEntity fr = worldIn.getTileEntity(pos);
-        if(fr == null){
-            return;
-        }
 
 
-        for (BlockPos bp : INPUTS.get(pos)) {
-            TileEntity te =worldIn.getTileEntity(bp);
-            if(te == null){
+
+        for (BlockPos pb : INPUTS.get(pos)) {
+
+            TileEntity fr = worldIn.getTileEntity(pb);
+            if(fr == null){
                 continue;
             }
-            if(this.canRecieve()){
-                if(this.MachineCanExtract(worldIn,bp)) {
-                    if(this.MachineEnergyAmount(worldIn,bp) > 0 && this.MachineEnergyAmount(worldIn,pos) < this.MachineEnergyMaxAmount(worldIn,pos))
-                    te.getCapability(CapabilityEnergy.ENERGY, null).ifPresent(capability -> capability.extractEnergy(1, false));
-                    fr.getCapability(CapabilityEnergy.ENERGY, null).ifPresent(capability -> capability.receiveEnergy(1, false));
-                    break;
-                }else {
+
+            for (BlockPos bp : INPUTS.get(pos)) {
+
+
+                TileEntity te = worldIn.getTileEntity(bp);
+                if (te == null) {
                     continue;
                 }
-            }else if(this.canExtract()){
-                if(this.MachineCanRecieve(worldIn,bp)) {
-                    if(this.MachineEnergyAmount(worldIn,pos) > 0 && this.MachineEnergyAmount(worldIn,bp) < this.MachineEnergyMaxAmount(worldIn,bp)) {
-                        fr.getCapability(CapabilityEnergy.ENERGY, null).ifPresent(capability -> capability.extractEnergy(1, false));
-                        te.getCapability(CapabilityEnergy.ENERGY, null).ifPresent(capability -> capability.receiveEnergy(1, false));
-                    }else {
+                if (this.MachineCanRecieve(worldIn,pb)) {
+                    if (this.MachineCanExtract(worldIn, bp)) {
+                        if (this.MachineEnergyAmount(worldIn, bp) > 0 && this.MachineEnergyAmount(worldIn, pb) < this.MachineEnergyMaxAmount(worldIn, pb))
+                            te.getCapability(CapabilityEnergy.ENERGY, Direction.NORTH).ifPresent(capability -> capability.extractEnergy(1, false));
+                            fr.getCapability(CapabilityEnergy.ENERGY, Direction.NORTH).ifPresent(capability -> capability.receiveEnergy(1, false));
+                            for (ServerPlayerEntity spe : worldIn.getPlayers()) {
+                                spe.sendMessage(ITextComponent.getTextComponentOrEmpty("send"),null);
+                            }
+                    } else {
                         continue;
                     }
-                    break;
+                } else if (this.MachineCanExtract(worldIn,pb)) {
+                    if (this.MachineCanRecieve(worldIn, bp)) {
+                        if (this.MachineEnergyAmount(worldIn, pos) > 0 && this.MachineEnergyAmount(worldIn, bp) < this.MachineEnergyMaxAmount(worldIn, bp)) {
+                            fr.getCapability(CapabilityEnergy.ENERGY, Direction.NORTH).ifPresent(capability -> capability.extractEnergy(1, false));
+                            te.getCapability(CapabilityEnergy.ENERGY, Direction.NORTH).ifPresent(capability -> capability.receiveEnergy(1, false));
+                            for (ServerPlayerEntity spe : worldIn.getPlayers()) {
+                                spe.sendMessage(ITextComponent.getTextComponentOrEmpty("send"),null);
+                            }
+                        } else {
+                            continue;
+                        }
+                    }
                 }
             }
-            break;
         }
 
     }

@@ -42,10 +42,10 @@ public class RocketItem extends Item {
 
         if(entities.size() < 1) {
             if (state.getBlock() instanceof LaunchpadBlock && state.get(LaunchpadBlock.STATE) == 1) {
-                if (context.getWorld() instanceof ServerWorld && !context.getWorld().isRemote) {
+                //if (context.getWorld() instanceof ServerWorld && !context.getWorld().isRemote) {
                     RocketEntity r = new RocketEntity((EntityType<? extends CreatureEntity>) PGEntitys.ROCKET.get(), context.getWorld());
 
-                    ((ServerWorld) context.getWorld()).func_242417_l(r);
+                    //((ServerWorld) context.getWorld()).func_242417_l(r);
                     float f = (float) MathHelper.floor((MathHelper.wrapDegrees(context.getPlacementYaw() - 180.0F) + 22.5F) / 90.0F) * 90.0F;
 
                     context.getWorld().addEntity(r);
@@ -61,7 +61,7 @@ public class RocketItem extends Item {
                     r.prevRenderYawOffset = r.rotationYaw;
                     r.rotationYawHead = r.rotationYaw;
                     r.prevRotationYawHead = r.rotationYaw;
-                }
+                //}
                 /*context.getWorld().addEntity(r);
                 r.rotationYaw = yaw;
                 r.setHeadRotation(yaw,0);

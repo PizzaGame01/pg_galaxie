@@ -108,7 +108,7 @@ public class DisplayCaseContainer extends Container {
         }
         return stack;
     }*/
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    /*public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
         if (slot != null && slot.getHasStack()) {
@@ -128,6 +128,31 @@ public class DisplayCaseContainer extends Container {
                 slot.onSlotChanged();
             }
         }
+        return itemstack;
+    }*/
+
+    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+        ItemStack itemstack = ItemStack.EMPTY;
+        Slot slot = this.inventorySlots.get(index);
+        if (slot != null && slot.getHasStack()) {
+            ItemStack itemstack1 = slot.getStack();
+            itemstack = itemstack1.copy();
+            int numRows = (this.inventorySlots.size()/9);
+            if (index < numRows * 9) {
+                if (!this.mergeItemStack(itemstack1, numRows * 9, this.inventorySlots.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.mergeItemStack(itemstack1, 0, numRows * 9, false)) {
+                return ItemStack.EMPTY;
+            }
+
+            if (itemstack1.isEmpty()) {
+                slot.putStack(ItemStack.EMPTY);
+            } else {
+                slot.onSlotChanged();
+            }
+        }
+
         return itemstack;
     }
 }

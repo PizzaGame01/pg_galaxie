@@ -72,6 +72,10 @@ public class DisplayCaseTileEntity extends LockableLootTileEntity implements ICh
             }
         }
 
+        if(this.type == null){
+            this.type = PGChestType.OAK;
+        }
+
         this.chestContents = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
         if (!this.checkLootAndRead(nbt)) {
             ItemStackHelper.loadAllItems(nbt, this.chestContents);

@@ -41,6 +41,7 @@ public class DisplayCaseScreen extends ContainerScreen<DisplayCaseContainer> {
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
+        this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
         //this.renderHoveredTooltip(matrixStack,mouseX,mouseY);
 
         /*List<ITextComponent> x = new ArrayList<ITextComponent>();
