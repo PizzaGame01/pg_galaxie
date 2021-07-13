@@ -92,7 +92,7 @@ public class FuelRefineryBlock extends MachineBlock {
         }
     }
 
-    @Override
+    /*@Override
     public int EnergySpeed() {
         return 10;
     }
@@ -105,7 +105,7 @@ public class FuelRefineryBlock extends MachineBlock {
     @Override
     public boolean canExtract() {
         return false;
-    }
+    }*/
 
     @Override
     public boolean hasTileEntity(BlockState state) {

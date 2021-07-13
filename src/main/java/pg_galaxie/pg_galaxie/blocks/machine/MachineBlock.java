@@ -10,6 +10,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
@@ -29,9 +31,9 @@ public abstract class MachineBlock extends Block {
         this.INPUTS = new HashMap<>();
     }
 
-    public HashMap<BlockPos, List<BlockPos>> INPUTS;
+    public static HashMap<BlockPos, List<BlockPos>> INPUTS;
 
-    @Override
+    /*@Override
     public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
         super.onBlockAdded(state, worldIn, pos, oldState, isMoving);
         this.networkUpdate(pos,worldIn);
@@ -50,11 +52,13 @@ public abstract class MachineBlock extends Block {
             bl.add(pos.west());
             bl.add(pos.east());
 
+            HashMap<BlockPos, List<BlockPos>> map = new HashMap<>();
+
             List<BlockPos> blocked = new ArrayList<BlockPos>();
             blocked.add(pos);
             for (BlockPos c : bl) {
                 if (worldIn.getBlockState(c).getBlock() instanceof EnergyCable) {
-                    ((EnergyCable) worldIn.getBlockState(c).getBlock()).generateNetwork(pos, INPUTS, blocked, c, ((ServerWorld) worldIn));
+                    //((EnergyCable) worldIn.getBlockState(c).getBlock()).generateNetwork(pos, map, blocked, c, ((ServerWorld) worldIn));
                 }
             }
         }
@@ -65,9 +69,9 @@ public abstract class MachineBlock extends Block {
         if(!INPUTS.containsKey(pos)){
             INPUTS.put(pos,new ArrayList<BlockPos>());
         }
-        /*for (BlockPos c : INPUTS.get(pos)) {
+        for (BlockPos c : INPUTS.get(pos)) {
             System.out.println(c.getCoordinatesAsString());
-        }*/
+        }
         return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
     }
 
@@ -101,37 +105,39 @@ public abstract class MachineBlock extends Block {
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
         super.tick(state, worldIn, pos, rand);
 
-        if(!INPUTS.containsKey(pos)){
-            INPUTS.put(pos,new ArrayList<BlockPos>());
-        }
 
-
-
-
-        for (BlockPos pb : INPUTS.get(pos)) {
-
-            TileEntity fr = worldIn.getTileEntity(pb);
-            if(fr == null){
-                System.out.println("contiune");
-                continue;
+        if(!worldIn.isRemote()) {
+            if (!INPUTS.containsKey(pos)) {
+                INPUTS.put(pos, new ArrayList<BlockPos>());
             }
 
-            for (BlockPos bp : INPUTS.get(pos)) {
-                if(bp.getCoordinatesAsString().equals(pb.getCoordinatesAsString())){ continue;}
+            for (BlockPos pb : INPUTS.get(pos)) {
 
-                TileEntity te = worldIn.getTileEntity(bp);
-                if (te == null) {
+                TileEntity fr = worldIn.getTileEntity(pb);
+                if (fr == null) {
                     System.out.println("contiune");
                     continue;
                 }
-                if (this.MachineCanRecieve(worldIn,pb)||this.MachineCanExtract(worldIn, bp)) {
-                    if (this.MachineEnergyAmount(worldIn, bp) > 0 && this.MachineEnergyAmount(worldIn, pb) < this.MachineEnergyMaxAmount(worldIn, pb))
-                        te.getCapability(CapabilityEnergy.ENERGY, Direction.NORTH).ifPresent(capability -> capability.extractEnergy(1, false));
+
+                for (BlockPos bp : INPUTS.get(pos)) {
+                    if (bp.getCoordinatesAsString().equals(pb.getCoordinatesAsString())) {
+                        continue;
+                    }
+
+                    TileEntity te = worldIn.getTileEntity(bp);
+                    if (te == null) {
+                        System.out.println("contiune");
+                        continue;
+                    }
+                    if (this.MachineCanRecieve(worldIn, pb) || this.MachineCanExtract(worldIn, bp)) {
+                        if (this.MachineEnergyAmount(worldIn, bp) > 0 && this.MachineEnergyAmount(worldIn, pb) < this.MachineEnergyMaxAmount(worldIn, pb))
+                            te.getCapability(CapabilityEnergy.ENERGY, Direction.NORTH).ifPresent(capability -> capability.extractEnergy(1, false));
                         fr.getCapability(CapabilityEnergy.ENERGY, Direction.NORTH).ifPresent(capability -> capability.receiveEnergy(1, false));
                         System.out.println("send");
-                }else {
-                    for (ServerPlayerEntity spe : worldIn.getPlayers()) {
-                        spe.sendMessage(ITextComponent.getTextComponentOrEmpty("this want not to work"), null);
+                    } else {
+                        for (ServerPlayerEntity spe : worldIn.getPlayers()) {
+                            spe.sendMessage(ITextComponent.getTextComponentOrEmpty("this want not to work"), null);
+                        }
                     }
                 }
             }
@@ -171,4 +177,5 @@ public abstract class MachineBlock extends Block {
                 .map(cap -> cap.getMaxEnergyStored())
                 .orElse(0);
     }
+    */
 }

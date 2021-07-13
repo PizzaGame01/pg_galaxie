@@ -7,26 +7,97 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.energy.CapabilityEnergy;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
 
 public class EnergyCable extends Block {
+
     public EnergyCable(Properties properties) {
         super(properties);
-        this.INPUTS = new HashMap<>();
     }
-    protected HashMap<BlockPos,List<BlockPos>> INPUTS;
+    public static HashMap<BlockPos,List<BlockPos>> CABLENETWORKS = new HashMap<>();
+    public static HashMap<BlockPos,List<BlockPos>> CABLES;
+
+    public void networkUpdate(BlockPos pos,World worldIn){
+        if(!worldIn.isRemote()) {
+            //if(!CABLENETWORKS.containsKey(pos)){
+            //    CABLENETWORKS.put(pos,new ArrayList<BlockPos>());
+            //}
+            /*List<BlockPos> bl = new ArrayList<BlockPos>();
+            bl.add(pos.up());
+            bl.add(pos.down());
+            bl.add(pos.south());
+            bl.add(pos.north());
+            bl.add(pos.west());
+            bl.add(pos.east());*/
+
+            HashMap<BlockPos, List<BlockPos>> map = new HashMap<>();
+            HashMap<BlockPos, List<BlockPos>> map2 = new HashMap<>();
+
+            List<BlockPos> blocked = new ArrayList<BlockPos>();
+            blocked.add(pos);
+            this.generateNetwork(pos, map, blocked, pos, (ServerWorld) worldIn);
+            //for (BlockPos c : bl) {
+            //    if (worldIn.getBlockState(c).getBlock() instanceof EnergyCable) {
+            //        ((EnergyCable) worldIn.getBlockState(c).getBlock()).generateNetwork(pos, map, blocked, c, ((ServerWorld) worldIn));
+            //    }
+            //}
+
+            if (map.get(pos) == null) {
+                map.put(pos, new ArrayList<>());
+            }
+
+            boolean ALREADY_EXIST = true;
+
+            if (CABLENETWORKS.entrySet().size() == 0) {
+                System.out.println("System Added");
+                CABLENETWORKS.put(pos, map.get(pos));
+            } else {
+                for (Map.Entry<BlockPos, List<BlockPos>> x : CABLENETWORKS.entrySet()) {
+                    ALREADY_EXIST = true;
+                    System.out.println("####TASK####");
+                    for (BlockPos p : map.get(pos)) {
+                        if (!(x.getValue().contains(p))) {
+                            ALREADY_EXIST = false;
+                            System.out.println("exist");
+                        } else {
+                            System.out.println("don't exist");
+                        }
+                    }
+                    if (ALREADY_EXIST) {
+                        break;
+                    }
+                }
+
+                if ((!ALREADY_EXIST) && (map.get(pos).size() > 0)) {
+                    System.out.println("System Added");
+                    CABLENETWORKS.put(pos, map.get(pos));
+                } else {
+                    System.out.println("already exist");
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+        super.onBlockAdded(state, worldIn, pos, oldState, isMoving);
+        System.out.println("x");
+        this.networkUpdate(pos,worldIn);
+    }
 
     public void generateNetwork(BlockPos engine, HashMap<BlockPos, List<BlockPos>> machines, List<BlockPos> blocked, BlockPos checkedblock, ServerWorld world){
         blocked.add(checkedblock);
-        if(!INPUTS.containsKey(checkedblock)){
+        /*if(!INPUTS.containsKey(checkedblock)){
             INPUTS.put(checkedblock,new ArrayList<BlockPos>());
         }
         List<BlockPos> bp = INPUTS.get(checkedblock);
         bp.add(engine);
-        INPUTS.put(checkedblock,bp);
+        INPUTS.put(checkedblock,bp);*/
+
+        if(machines.get(engine) == null){
+            machines.put(engine,new ArrayList<>());
+        }
 
         List<BlockPos> bl = new ArrayList<BlockPos>();
         bl.add(checkedblock.up());
@@ -42,22 +113,12 @@ public class EnergyCable extends Block {
                     ((EnergyCable) world.getBlockState(c).getBlock()).generateNetwork(engine, machines, blocked, c, world);
                 }else {
                     if(this.MachineCanRecieve(world,c)||this.MachineCanExtract(world,c)) {
-                        //if(!machines.containsKey(c)) {
                             System.out.println("machine"+engine.getCoordinatesAsString()+" find at: "+c.getCoordinatesAsString());
                             blocked.add(c);
                             List<BlockPos> pos = machines.get(engine);
                             pos.add(c);
                             machines.put(engine, pos);
-                            //INPUTS.put()
                         }
-                    /*}else if(this.MachineCanExtract(world,c)) {
-                        //if(!machines.containsKey(c)) {
-                            System.out.println("machine"+engine.getCoordinatesAsString()+" find at: "+c.getCoordinatesAsString());
-                            blocked.add(c);
-                            List<BlockPos> pos = machines.get(engine);
-                            pos.add(c);
-                            machines.put(engine, pos);
-                        //}*/
 
                     }
                 }
@@ -71,19 +132,24 @@ public class EnergyCable extends Block {
 
 
         if(!worldIn.isRemote()){
-            if(!INPUTS.containsKey(pos)){
-                INPUTS.put(pos,new ArrayList<BlockPos>());
-            }
+            //if(!CABLENETWORKS.containsKey(pos)){
+            //    CABLENETWORKS.put(pos,new ArrayList<BlockPos>());
+            //}
 
-            List<BlockPos> BLOCKS = INPUTS.get(pos);
+            //List<BlockPos> BLOCKS = CABLENETWORKS.get(pos);
             //INPUTS.clear();
-            for (BlockPos bp : BLOCKS) {
-                System.out.println("update");
-                if (worldIn.getBlockState(bp).getBlock() instanceof MachineBlock) {
-                    ((MachineBlock)worldIn.getBlockState(bp).getBlock()).INPUTS.remove(bp);
-                    ((MachineBlock)worldIn.getBlockState(bp).getBlock()).networkUpdate(pos,((World)worldIn));
+            //for (BlockPos bp : BLOCKS) {
+                //System.out.println("update");
+                //if (worldIn.getBlockState(bp).getBlock() instanceof MachineBlock) {
+                    //((MachineBlock)worldIn.getBlockState(bp).getBlock()).INPUTS.remove(bp);
+            for (Map.Entry<BlockPos,List<BlockPos>>x :CABLENETWORKS.entrySet()) {
+                if(x.getValue().contains(pos)){
+                    CABLENETWORKS.remove(x.getKey());
                 }
             }
+
+            this.networkUpdate(pos,worldIn);
+                    //((MachineBlock)worldIn.getBlockState(bp).getBlock()).networkUpdate(pos,((World)worldIn));
         }
     }
 
