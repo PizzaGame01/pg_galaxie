@@ -20,7 +20,7 @@ public class EnergyCable extends Block {
         super(properties);
     }
     public static HashMap<BlockPos,List<BlockPos>> CABLENETWORKS = new HashMap<>();
-    public static HashMap<BlockPos,List<BlockPos>> CABLES;
+    public static HashMap<BlockPos,List<BlockPos>> CABLES = new HashMap<>();
 
     public void networkUpdate(BlockPos pos,World worldIn){
         if(!worldIn.isRemote()) {
@@ -40,7 +40,7 @@ public class EnergyCable extends Block {
 
             List<BlockPos> blocked = new ArrayList<BlockPos>();
             blocked.add(pos);
-            this.generateNetwork(pos, map, blocked, pos, (ServerWorld) worldIn);
+            this.generateNetwork(pos, map,map2, blocked, pos, (ServerWorld) worldIn);
             //for (BlockPos c : bl) {
             //    if (worldIn.getBlockState(c).getBlock() instanceof EnergyCable) {
             //        ((EnergyCable) worldIn.getBlockState(c).getBlock()).generateNetwork(pos, map, blocked, c, ((ServerWorld) worldIn));
@@ -56,6 +56,7 @@ public class EnergyCable extends Block {
             if (CABLENETWORKS.entrySet().size() == 0) {
                 System.out.println("System Added");
                 CABLENETWORKS.put(pos, map.get(pos));
+                CABLES.put(pos, map2.get(pos));
             } else {
                 for (Map.Entry<BlockPos, List<BlockPos>> x : CABLENETWORKS.entrySet()) {
                     ALREADY_EXIST = true;
@@ -76,6 +77,7 @@ public class EnergyCable extends Block {
                 if ((!ALREADY_EXIST) && (map.get(pos).size() > 0)) {
                     System.out.println("System Added");
                     CABLENETWORKS.put(pos, map.get(pos));
+                    CABLES.put(pos, map2.get(pos));
                 } else {
                     System.out.println("already exist");
                 }
@@ -90,7 +92,7 @@ public class EnergyCable extends Block {
         this.networkUpdate(pos,worldIn);
     }
 
-    public void generateNetwork(BlockPos engine, HashMap<BlockPos, List<BlockPos>> machines, List<BlockPos> blocked, BlockPos checkedblock, ServerWorld world){
+    public void generateNetwork(BlockPos engine, HashMap<BlockPos, List<BlockPos>> machines,HashMap<BlockPos,List<BlockPos>> cable, List<BlockPos> blocked, BlockPos checkedblock, ServerWorld world){
         blocked.add(checkedblock);
         /*if(!INPUTS.containsKey(checkedblock)){
             INPUTS.put(checkedblock,new ArrayList<BlockPos>());
@@ -101,6 +103,15 @@ public class EnergyCable extends Block {
 
         if(machines.get(engine) == null){
             machines.put(engine,new ArrayList<>());
+        }
+        if(cable.get(engine) == null){
+            cable.put(engine,new ArrayList<>());
+        }
+
+        if(world.getBlockState(checkedblock).getBlock() instanceof EnergyCable){
+            List<BlockPos> ca = cable.get(engine);
+            ca.add(checkedblock);
+            cable.put(engine,ca);
         }
 
         List<BlockPos> bl = new ArrayList<BlockPos>();
@@ -114,7 +125,7 @@ public class EnergyCable extends Block {
         for (BlockPos c : bl) {
             if(!blocked.contains(c)) {
                 if (world.getBlockState(c).getBlock() instanceof EnergyCable) {
-                    ((EnergyCable) world.getBlockState(c).getBlock()).generateNetwork(engine, machines, blocked, c, world);
+                    ((EnergyCable) world.getBlockState(c).getBlock()).generateNetwork(engine, machines,cable, blocked, c, world);
                 }else {
                     if(this.MachineCanRecieve(world,c)||this.MachineCanExtract(world,c)) {
                             System.out.println("machine"+engine.getCoordinatesAsString()+" find at: "+c.getCoordinatesAsString());
@@ -150,6 +161,7 @@ public class EnergyCable extends Block {
                 for (Map.Entry<BlockPos,List<BlockPos>>x :CABLENETWORKS.entrySet()) {
                     if(x.getValue().contains(pos)){
                         CABLENETWORKS.remove(x.getKey());
+                        CABLES.remove(x.getKey());
                     }
                 }
             }catch (ConcurrentModificationException cme){

@@ -36,7 +36,7 @@ public class FuelRefineryTileEntity extends LockableLootTileEntity {
     public NonNullList<ItemStack> inventory;
     protected int numPlayersUsing;
 
-    private final FluidTank fluidTank= new FluidTank(3000, fs -> {
+    public final FluidTank fluidTank= new FluidTank(3000, fs -> {
         if (fs.getFluid() == Fluids.WATER)
             return true;
         if (fs.getFluid() == Fluids.FLOWING_WATER)
@@ -54,8 +54,8 @@ public class FuelRefineryTileEntity extends LockableLootTileEntity {
             //markDirty();
             world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 2);
         }
-    };;
-    private final EnergyStorage energyStorage = new EnergyStorage(9000, 200, 200, 0) {
+    };
+    public final EnergyStorage energyStorage = new EnergyStorage(9000, 200, 200, 0) {
         @Override
         public int receiveEnergy(int maxReceive, boolean simulate) {
             int retval = super.receiveEnergy(maxReceive, simulate);
@@ -101,7 +101,7 @@ public class FuelRefineryTileEntity extends LockableLootTileEntity {
                 case 0:
                     return FuelRefineryTileEntity.this.maxbuckets;
                 case 1:
-                    return FuelRefineryTileEntity.this.buckets;
+                    return FuelRefineryTileEntity.this.fluidTank.getFluidAmount()/1000;//FuelRefineryTileEntity.this.buckets;
                 default:
                     return 0;
             }

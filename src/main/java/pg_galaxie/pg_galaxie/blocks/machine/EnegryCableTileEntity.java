@@ -1,5 +1,6 @@
 package pg_galaxie.pg_galaxie.blocks.machine;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -9,9 +10,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.EnergyStorage;
 import pg_galaxie.pg_galaxie.deferreds.PGTileEntitys;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +26,38 @@ public class EnegryCableTileEntity extends TileEntity implements ITickableTileEn
     public EnegryCableTileEntity() {
         super(PGTileEntitys.CABLE.get());
     }
+
+    public EnergyStorage ENERGY = new EnergyStorage(9000, 200, 200, 0) {
+        @Override
+        public int receiveEnergy(int maxReceive, boolean simulate) {
+            int retval = super.receiveEnergy(maxReceive, simulate);
+            if (!simulate) {
+                world.getTileEntity(pos).markDirty();
+                world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 2);
+            }
+            return retval;
+        }
+
+        @Override
+        public int extractEnergy(int maxExtract, boolean simulate) {
+            int retval = super.extractEnergy(maxExtract, simulate);
+            if (!simulate) {
+                world.getTileEntity(pos).markDirty();
+                world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 2);
+            }
+            return retval;
+        }
+
+        @Override
+        public boolean canExtract() {
+            return true;
+        }
+
+        @Override
+        public int getMaxEnergyStored() {
+            return 1000;
+        }
+    };
 
     @Override
     public void tick() {
@@ -39,22 +77,25 @@ public class EnegryCableTileEntity extends TileEntity implements ITickableTileEn
                     }
 
                     for (BlockPos c : RECIEVE) {
-                        for(BlockPos e : EXTRACT){
+                        for(BlockPos e : EnergyCable.CABLES.get(pos)){
                             TileEntity et = this.world.getTileEntity(e);
-                            TileEntity ct = this.world.getTileEntity(e);
+                            TileEntity ct = this.world.getTileEntity(c);
 
                             if(et == null||ct==null){
                                 continue;
                             }
-                            if(this.getEnergy(world,e) >= 1&&this.getEnergy(world,c) < this.getMaxEnergy(world,c)){
 
-                                et.getCapability(CapabilityEnergy.ENERGY, Direction.NORTH).ifPresent(capability -> capability.extractEnergy(1, false));
-                                ct.getCapability(CapabilityEnergy.ENERGY, Direction.NORTH).ifPresent(capability -> capability.receiveEnergy(1, false));
-                            }
+                            //if(this.getEnergy(world,e) >= 1&&this.getEnergy(world,c) < this.getMaxEnergy(world,c)){
+
+                                world.setBlockState(c, Blocks.BEDROCK.getDefaultState());
+                                System.out.println("work");
+                                //et.getCapability(CapabilityEnergy.ENERGY, Direction.NORTH).ifPresent(capability -> capability.extractEnergy(1, true));
+                                //ct.getCapability(CapabilityEnergy.ENERGY, Direction.NORTH).ifPresent(capability -> capability.receiveEnergy(1, true));
+                            //}
                         }
                     }
 
-                    System.out.println("handle");
+                    //System.out.println("handle");
                     /*for (BlockPos pb : EnergyCable.CABLENETWORKS.get(pos)) {
                         TileEntity fr = this.world.getTileEntity(pb);
                         if (fr == null) {
@@ -115,5 +156,15 @@ public class EnegryCableTileEntity extends TileEntity implements ITickableTileEn
                 .flatMap(te -> te.getCapability(CapabilityEnergy.ENERGY).resolve())
                 .map(cap -> cap.getMaxEnergyStored())
                 .orElse(0);
+    }
+
+    @Nonnull
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+
+        if(cap == CapabilityEnergy.ENERGY) {
+            return LazyOptional.of(() -> this.ENERGY).cast();
+        }
+        return null;
     }
 }
