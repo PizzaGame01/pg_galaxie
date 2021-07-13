@@ -7,10 +7,13 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
 import pg_galaxie.pg_galaxie.deferreds.PGTileEntitys;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class EnegryCableTileEntity extends TileEntity implements ITickableTileEntity {
@@ -24,14 +27,40 @@ public class EnegryCableTileEntity extends TileEntity implements ITickableTileEn
             if (this.world.getBlockState(this.pos).getBlock() instanceof EnergyCable) {
                 EnergyCable ec = (EnergyCable) this.world.getBlockState(this.pos).getBlock();
                 if (EnergyCable.CABLENETWORKS.get(this.pos) != null) {
-                    for (BlockPos pb : EnergyCable.CABLENETWORKS.get(pos)) {
+                    List<BlockPos> RECIEVE = new ArrayList<>();
+                    List<BlockPos> EXTRACT = new ArrayList<>();
 
+                    for (BlockPos p:EnergyCable.CABLENETWORKS.get(pos)) {
+                        if(this.canExtract(world,p)){
+                            EXTRACT.add(p);
+                        }else if(this.canRecieve(world,p)){
+                            RECIEVE.add(p);
+                        }
+                    }
+
+                    for (BlockPos c : RECIEVE) {
+                        for(BlockPos e : EXTRACT){
+                            TileEntity et = this.world.getTileEntity(e);
+                            TileEntity ct = this.world.getTileEntity(e);
+
+                            if(et == null||ct==null){
+                                continue;
+                            }
+                            if(this.getEnergy(world,e) >= 1&&this.getEnergy(world,c) < this.getMaxEnergy(world,c)){
+
+                                et.getCapability(CapabilityEnergy.ENERGY, Direction.NORTH).ifPresent(capability -> capability.extractEnergy(1, false));
+                                ct.getCapability(CapabilityEnergy.ENERGY, Direction.NORTH).ifPresent(capability -> capability.receiveEnergy(1, false));
+                            }
+                        }
+                    }
+
+                    System.out.println("handle");
+                    /*for (BlockPos pb : EnergyCable.CABLENETWORKS.get(pos)) {
                         TileEntity fr = this.world.getTileEntity(pb);
                         if (fr == null) {
                             System.out.println("contiune");
                             continue;
                         }
-
                         for (BlockPos bp : EnergyCable.CABLENETWORKS.get(pos)) {
                             if (bp.getCoordinatesAsString().equals(pb.getCoordinatesAsString())) {
                                 continue;
@@ -43,13 +72,18 @@ public class EnegryCableTileEntity extends TileEntity implements ITickableTileEn
                                 continue;
                             }
                             if (this.canRecieve(world, pb) || this.canExtract(world, bp)) {
-                                if (this.getEnergy(world, bp) > 0 && this.getEnergy(world, pb) < this.getMaxEnergy(world, pb))
+                                if (this.getEnergy(world, bp) > 0 && this.getEnergy(world, pb) < this.getMaxEnergy(world, pb)) {
                                     te.getCapability(CapabilityEnergy.ENERGY, Direction.NORTH).ifPresent(capability -> capability.extractEnergy(1, false));
-                                fr.getCapability(CapabilityEnergy.ENERGY, Direction.NORTH).ifPresent(capability -> capability.receiveEnergy(1, false));
-                                System.out.println("send");
+                                    fr.getCapability(CapabilityEnergy.ENERGY, Direction.NORTH).ifPresent(capability -> capability.receiveEnergy(1, false));
+                                    System.out.println("send");
+
+                                    world.getPlayers().get(0).sendMessage(ITextComponent.getTextComponentOrEmpty("send"),null);
+                                }else {
+                                    world.getPlayers().get(0).sendMessage(ITextComponent.getTextComponentOrEmpty("its worng"),null);
+                                }
                             }
                         }
-                    }
+                    }*/
                 }
             }
         }

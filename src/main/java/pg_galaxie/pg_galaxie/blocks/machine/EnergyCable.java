@@ -2,11 +2,15 @@ package pg_galaxie.pg_galaxie.blocks.machine;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.energy.CapabilityEnergy;
+import pg_galaxie.pg_galaxie.blocks.fuel_refinery.FuelRefineryTileEntity;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 
@@ -142,10 +146,14 @@ public class EnergyCable extends Block {
                 //System.out.println("update");
                 //if (worldIn.getBlockState(bp).getBlock() instanceof MachineBlock) {
                     //((MachineBlock)worldIn.getBlockState(bp).getBlock()).INPUTS.remove(bp);
-            for (Map.Entry<BlockPos,List<BlockPos>>x :CABLENETWORKS.entrySet()) {
-                if(x.getValue().contains(pos)){
-                    CABLENETWORKS.remove(x.getKey());
+            try {
+                for (Map.Entry<BlockPos,List<BlockPos>>x :CABLENETWORKS.entrySet()) {
+                    if(x.getValue().contains(pos)){
+                        CABLENETWORKS.remove(x.getKey());
+                    }
                 }
+            }catch (ConcurrentModificationException cme){
+
             }
 
             this.networkUpdate(pos,worldIn);
@@ -166,5 +174,16 @@ public class EnergyCable extends Block {
                 .flatMap(te -> te.getCapability(CapabilityEnergy.ENERGY).resolve())
                 .map(cap -> cap.canExtract())
                 .orElse(false);
+    }
+
+    @Override
+    public boolean hasTileEntity(BlockState state) {
+        return true;
+    }
+
+    @Nullable
+    @Override
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+        return new EnegryCableTileEntity();
     }
 }
